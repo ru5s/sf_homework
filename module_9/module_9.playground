@@ -1,0 +1,251 @@
+import Foundation
+
+
+//Вводимые параметры для машины
+var powerOfTesla = 100 // Заряд в процентах батареи Тесла
+var chargingStation: Int = 20 // Расстояние до станции подзарядки
+var onAutoPilot: Bool = false // Включен ли автопилот
+var onMusic: Bool = true // Включена ли музыка
+var volumeOfMusic: Int = 10 // Максимальная громкость музыки 100%
+var onOpenHetch: Bool = true // Открыт ли люк
+var howMuchOpenHetch: Int = 65 // На сколько открыт люк, максимум 100%
+var outdoorTemp: Int = 25 // Температура воздуха на улице
+var onFan: Bool = true //Включен ли кондиционер
+var fanTemperature: Int = 45// Температура кондиционера
+var onPowerOfFan: Int = 60 // Сила обдува в кондиционере 100%
+var onSeatHeating: Bool = false // Подогрев сидений
+var volumeOfTirePressure: Double = 2.5 // Давление в шинах от нуля до 3
+var aboutCar: Bool = false // Узнать подробности о машине
+var lostWayFromGps: Bool = false // Потеря сигнала GPS
+//
+
+var safeDrive: Bool = true
+class car {
+    var weight: Int
+    var lenght: Int
+    var width: Int
+    var height: Int
+    var whellbase: Int
+    var clearance: Double
+    var trunkVolume: Int
+    init(weight: Int, lenght: Int, width: Int, height: Int, whellbase: Int, clearance: Double, trunkVolume: Int){
+        self.weight = weight
+        self.lenght = lenght
+        self.width = width
+        self.height = height
+        self.whellbase = whellbase
+        self.clearance = clearance
+        self.trunkVolume = trunkVolume
+    }
+}
+
+var isLost: Bool = false
+var lowBattery: Bool = false
+var brokeAuto: Bool = false
+var outOfRange: Bool = false
+
+class teslaCar: car {
+    var power: Int
+    var autoPilot: Bool
+    var music: Bool
+    var openHatch: Bool
+    var fan: Int
+    var seatHeating: Bool
+    var tirePressure: Double
+    init(power: Int,autoPilot: Bool, music: Bool, openHatch: Bool, fan: Int, seatHeating: Bool, tirePressure: Double){
+        self.power = power
+        self.autoPilot = autoPilot
+        self.music = music
+        self.openHatch = openHatch
+        self.fan = fan
+        self.seatHeating = seatHeating
+        self.tirePressure = tirePressure
+        super.init(weight: 2108, lenght: 4976, width: 1963, height: 1435, whellbase: 2959, clearance: 154.9, trunkVolume: 900)
+    }
+}
+let tesla: teslaCar = teslaCar(power: powerOfTesla,autoPilot: onAutoPilot, music: onMusic, openHatch: onOpenHetch, fan: onPowerOfFan, seatHeating: onSeatHeating, tirePressure: volumeOfTirePressure)
+
+print("Вас приветствует автомобиль Тесла!")
+if outdoorTemp < 0 {
+    print("Температура воздуха снаружи составляет \(outdoorTemp)ºС.")
+}else{
+    print("Температура воздуха снаружи составляет +\(outdoorTemp)ºС.")
+}
+switch onPowerOfFan{
+case 0...100:
+    break
+default:
+    print("------------------------\nВведено не корректное значение силы обдува\n------------------------")
+}
+
+switch outdoorTemp{
+case -40...10:
+    if !onFan{
+        print("На улице очень холодно, рекомендуем включить кондиционер на 30ºС.")
+    }else if onFan && fanTemperature < 30{
+        print("На улице очень холодно, рекомендуем поднять температуру кондиционера до 30ºС.")
+    }
+case 11...21:
+    if onFan{
+        break
+    }
+    print("На улице прохладно и свежо, рекомендуем включить кондиционер на 25ºС.")
+case 21...25:
+    if !onFan{
+        print("На улице хорошая и теплая погода, стоит приоткрыть люк и получать удовольствие от воздуха.")
+    }else if onFan && !onOpenHetch{
+        print("Рекомендуем выключить кондиционер и приоткрыть люк.")
+    }else if onFan && onOpenHetch{
+        print("Рекомендуем выключить кондиционер.")
+    }
+case 25...40:
+    if !onFan{
+        print("На улице жарко, рекомендуем воспользоваться кондиционером.")
+    }
+default:
+    break
+}
+
+func changeMusic(){
+    if onMusic && (volumeOfMusic < 0 || volumeOfMusic > 100){
+        outOfRange = true
+        print("------------------------\nВведено не корректное значение громкости для музыки\n------------------------")
+    }else{
+        if onMusic {
+            print("Музыка включена, громкость составляет \(volumeOfMusic)%.")
+        }else{
+            print("Музыка выключена.")
+        }
+    }
+}
+
+func setSeatHeating(){
+    if onSeatHeating && outdoorTemp < 15 {
+        print("Подогрев сидений включен.")
+    }else if onSeatHeating && outdoorTemp > 15{
+        print("Подогрев сидений включен, это не безопасно для здоровья!")
+    }else if !onSeatHeating && outdoorTemp < 15{
+        print("Подогрев сидений отключен, рекомендуем включить обогрем.")
+    }else if !onSeatHeating{
+        print("Подогрев сидений отключен.")
+    }
+}
+setSeatHeating()
+changeMusic()
+
+func manualHetch() {
+    if onOpenHetch && (howMuchOpenHetch < 0 || howMuchOpenHetch > 100){
+        outOfRange = true
+        print("------------------------\nВведено не корректное значение для крышки люка\n------------------------")
+    }else if onOpenHetch{
+        print("Крышка люка открыта на \(howMuchOpenHetch)%.")
+    }else{
+        print("Крышка люка закрыта.")
+    }
+}
+manualHetch()
+var teslaOptions: [String] = [
+    "вес \(tesla.weight) кг",
+    "длина \(tesla.lenght) мм",
+    "ширина (с учетом боковых зеркал) \(tesla.width) мм",
+    "высота \(tesla.height) мм",
+    "колесная база \(tesla.whellbase) мм",
+    "клиренс \(tesla.clearance) мм",
+    "объем багажника \(tesla.trunkVolume) литров",
+]
+
+if aboutCar {
+    var info: String = ""
+    for i in teslaOptions{
+        info.append(i + ", ")
+    }
+    print("Данные автомобиля Тесла: \n\(info)")
+}
+
+let maximumDistance: Int = 452
+func howFarTeslaDrive(){
+    switch powerOfTesla{
+    case 0...100:
+        let way: Int  = powerOfTesla * 452 / 100
+        print("Заряд вашего аккумулятора составляет \(powerOfTesla)%,\nэтого хватит вам на \(way) км")
+        if powerOfTesla <= 10{
+            lowBattery = true
+            print("------------------------\nЗаряда батареи осталось мало!!! Блажайшая станция подзарядки находится через \(chargingStation) км\n------------------------")
+        }
+    default:
+        print("------------------------\nВведено не корректное значение.\n------------------------")
+    }
+}
+howFarTeslaDrive()
+
+if volumeOfTirePressure < 2 {
+    print("Давление в шинах составляет \(volumeOfTirePressure) и является опасным, движение на автомобиле не безопасно.")
+    brokeAuto = true
+    safeDrive = false
+}else if volumeOfTirePressure <= 2.5 {
+    print("Давление в шинах оптимальное.")
+    safeDrive = true
+}else if volumeOfTirePressure > 2.5{
+    print("Давление в шинах выше нормы (2.5 bar) и составляет сейчас \(volumeOfTirePressure) bar, просьба спусить до нормы.")
+}
+
+switch volumeOfTirePressure{
+case 0...3:
+    break
+default:
+    print("------------------------\nВведено не корректное значение давления шин\n------------------------")
+}
+
+if onAutoPilot && safeDrive{
+    print("Включен автопилот, рекомендуем внимательно следить за дорогой при текущем режиме.")
+}else if !onAutoPilot && safeDrive{
+    print("Включен режим мануального управления.")
+}
+
+if lostWayFromGps {
+    isLost = true
+}
+
+enum AutoError: Error{
+    case isLost
+    case lowBattery
+    case brokeAuto
+    case outOfRange
+}
+
+func allError() throws{
+    if isLost{
+        throw AutoError.isLost
+    }
+    if lowBattery{
+        throw AutoError.lowBattery
+    }
+    if brokeAuto{
+        throw AutoError.brokeAuto
+    }
+    if outOfRange{
+        throw AutoError.outOfRange
+    }
+}
+
+do{
+    try allError()
+}catch AutoError.brokeAuto{
+    print("------------------------\nАвтомобиль сломан, обратитесь в поддержку!\n------------------------")
+}catch AutoError.isLost{
+    print("------------------------\nПотеря локации, подключите GPS.\n------------------------")
+}catch AutoError.lowBattery{
+    print("------------------------\nПодключите зарядное устройство.\n------------------------")
+}catch AutoError.outOfRange{
+    print("------------------------\nВведено не корректное значение!!!\n------------------------")
+}
+
+if safeDrive && !lowBattery && !brokeAuto && !outOfRange{
+    print("Желаем приятного пути!")
+}else if lowBattery && brokeAuto{
+    print("------------------------\nАвтомобиль находится в аварийном сосотоянии.\n------------------------")
+    brokeAuto = true
+}
+
+
+
