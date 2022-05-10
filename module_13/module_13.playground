@@ -1,0 +1,125 @@
+//Кортеж для двух челвек с однинаковыми типами данных и параметров
+
+let firstPerson = (age: 25, name: "Stalone", weight: 60.35)
+let secondPerson = (age: 34, name: "Jeremy", weight: 90)
+
+print("Приветствую вас \(firstPerson.name), по моим данным вам \(firstPerson.age) лет и вес ваш составляет \(firstPerson.weight) кг\n")
+print("""
+Контактные данные:
+Имя: \(secondPerson.1)
+Возраст: \(secondPerson.0) лет
+Вес: \(secondPerson.2) кг
+""")
+
+print("-----------------")
+//Создайте массив дни в месяцах
+
+let monthsInAYear: [Int] = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+//Выведете количество дней в каждом месяце
+for dayInAMonth in monthsInAYear {
+    print(dayInAMonth)
+}
+
+print("-----------------")
+//Использовать еще один массив с именами месяцев чтоб вывести название месяца + количество дней
+let nameOfMonths: [String] = ["January", "February", "March" ,"April", "May", "June", "July", "August" ,"September", "October", "November", "December"]
+var days: Int = 0
+for monthPlusDays in nameOfMonths{
+    print("In \(monthPlusDays), \(monthsInAYear[days]) days")
+    days += 1
+}
+
+print("-----------------")
+//Создать массив кортежей где каждый содержит название месяца и количество дней
+
+let tuplesMonths = [("January", 31), ("February", 28), ("March", 31), ("April", 30), ("May", 31), ("June", 30), ("July", 31), ("August", 31), ("September", 30), ("October", 31), ("November", 30), ("December", 31)]
+
+for moths in tuplesMonths{
+    print("\(moths.0) have \(moths.1)")
+}
+
+print("-----------------")
+//Сделать обратный вывод предыдущему заданию
+
+for moths in tuplesMonths.reversed(){
+    print("\(moths.0) have \(moths.1)")
+}
+
+print("-----------------")
+//Для произвольно выбранной даты (месяц и день) посчитать количество дней до конца года
+
+var month: Int = 8
+let day: Int = 30
+
+func dayUntilTheEnd(){
+    let currentMonth: String
+    if month <= 12 && day <= monthsInAYear[month - 1]{
+        month = month - 1
+        currentMonth = nameOfMonths[month]
+        var remainingDays: Int = 0
+        // Подсчет оставшихся дней в текущем месяце
+        remainingDays = monthsInAYear[month] - day
+        // Подсчет дней в оставшихся месяцах
+        if month <= 10{
+            for i in (month + 1)...11{
+                remainingDays = remainingDays + monthsInAYear[i]
+            }
+        }
+        // Вывод в консоль
+        print("""
+"You choose \(day) of \(currentMonth),
+there are \(remainingDays) days left until the end of the year
+""")
+    // В случае выбора месяца выше чем нужно
+    }else{
+        print("Choosed incorrect number of month or day")
+    }
+    
+}
+
+dayUntilTheEnd()
+
+print("-----------------")
+//Создать словарь, как журнал студентов, где имя и фамилия это ключ, а оценка за экзамен это значение
+
+var journal: [String : Int] = ["Василий Пупкин" : 2, "Генадий Хазанов" : 1]
+
+//Изменить оценку студентам
+journal.updateValue(2, forKey: "Василий Пупкин")
+journal["Василий Пупкин"]
+journal.updateValue(5, forKey: "Генадий Хазанов")
+journal["Генадий Хазанов"]
+
+//Поздравлять или отправлять на пересдачу
+func congratsStudents(){
+    for (name, score) in journal{
+        switch score{
+        case 0...2:
+            print("\(name) отпаравлены на пересдачу")
+        case 3...5:
+            print("Поздавляем \(name), вы сдали экзамен!")
+        default:
+            print("Оценка выставлена не корректно по пятибальной оценке")
+            break
+        }
+    }
+}
+//Добавить еще несколько студентов
+journal[ "Валерий Емильянов" ] = 3
+journal["Елена Карп"] = 5
+
+congratsStudents()
+//Удалить одного студента
+journal.removeValue(forKey: "Василий Пупкин")
+
+print("----------------- после отчислений")
+congratsStudents()
+
+//Вывести средний бал по всем студентам
+var averegeScore: Double = 0
+
+for (_ , score) in journal{
+    averegeScore = averegeScore + Double(score)
+}
+averegeScore = averegeScore / Double(journal.count)
+print("Средний бал у студентов является \"\(averegeScore)\"")
