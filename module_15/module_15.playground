@@ -1,0 +1,104 @@
+//Создать перечисление для ошибок
+enum WebErrors: Error{
+    case error400 //Bad request
+    case error404 //Not found
+    case error500 //Internal server error
+}
+
+//Создать переменные для ошибок
+var error400 = false
+var error404 = false
+var error500 = true
+
+//Создать генерирующую функцию
+func webErrors()throws{
+    if error400{throw WebErrors.error400}
+    if error404{throw WebErrors.error404}
+    if error500{throw WebErrors.error500}
+}
+
+//При помощи do-catch создать обработку ошибок
+do{
+//    if error400{throw WebErrors.error400}
+//    if error404{throw WebErrors.error404}
+//    if error500{throw WebErrors.error500}
+    
+    // Добавить генерирующую функцию
+    try webErrors()
+}catch WebErrors.error400{
+    print("Error 400 - Bad request")
+}catch WebErrors.error404{
+    print("Error 404 - Page not found")
+}catch WebErrors.error500{
+    print("Error 500 - Internal server error")
+}
+
+print("--------------------------")
+//Написать функцию принимающую на вход два разных типа и проверять одинаковые ли они
+let typeOne: String = "String"
+let typeTwo: Int = 42
+let typeThree: String = "World without hello"
+
+func compareTypes <T,N>(type1: T,type2: N){
+    if type(of: T.self) == type(of: N.self){
+        print("Yes")
+    }else{
+        print("No")
+    }
+}
+compareTypes(type1: error400, type2: error500)
+compareTypes(type1: typeOne, type2: typeTwo)
+compareTypes(type1: error404, type2: typeTwo)
+
+print("--------------------------")
+//Реализуйте тоже самое, но если тип входных значений различается, выбросите исключение. Если тип одинаковый - тоже выбросите исключение, но оно будет говорить что типы одинаковые
+var identicalTypes: Bool = false
+var differentTypes: Bool = false
+
+enum Exception: Error{
+    case identicalTypes
+    case differentTypes
+}
+func compareTypesException()throws{
+    if identicalTypes {throw Exception.identicalTypes}
+    if differentTypes {throw Exception.differentTypes}
+}
+
+func compareTypes2 <T,N>(type1: T,type2: N)throws{
+    if type(of: T.self) == type(of: N.self){
+        print("\(type(of: type1)) == \(type(of: type2))")
+        identicalTypes = true
+        differentTypes = false
+    }else{
+        print("\(type(of: type1)) != \(type(of: type2))")
+        identicalTypes = false
+        differentTypes = true
+    }
+    do {
+        try compareTypesException()
+    }catch Exception.identicalTypes{
+        print("There are types is equal")
+    }catch Exception.differentTypes{
+        print("There are types isn't equal")
+    }
+}
+
+try compareTypes2(type1: 14, type2: 23)
+try compareTypes2(type1: "2", type2: 2)
+try compareTypes2(type1: typeThree, type2: typeOne)
+try compareTypes2(type1: "💻", type2: 4.6)
+
+print("--------------------------")
+//Напишите функцию, которая принимает на вход два любых значения и сравнивает их при помощи оператора равенства ==
+func compareTypesEquatable <T:Equatable>(value1: T,value2: T){
+    if value1 == value2{
+        print("value 1 is equal to value 2")
+    }else{
+        print("value 1 isn't equal to value 2")
+    }
+}
+compareTypesEquatable(value1: 10, value2: 10.5)
+compareTypesEquatable(value1: 2.2, value2: 2.2)
+compareTypesEquatable(value1: "one", value2: "one")
+compareTypesEquatable(value1: "🎥", value2: "🎥")
+compareTypesEquatable(value1: "🎥", value2: "💰")
